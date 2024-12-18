@@ -1,0 +1,7 @@
+.content-wrapper {
+  width: 100%;
+  max-width: 1440px; /* Set the max width */
+  margin: 0 auto; /* Center horizontally */
+  background-color: #ffffff; /* Optional background color */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional box shadow */
+}
