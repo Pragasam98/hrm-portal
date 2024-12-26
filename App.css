@@ -36,8 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-.appi {
-  max-width: 1440px; /* Set the max width */
-  margin: 0 auto;
-}

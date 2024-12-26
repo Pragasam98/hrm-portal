@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
-// Import SVG icons
+// Import icons
 import DashboardIcon from "../assets/icons/dashboard.svg";
 import EmployeeIcon from "../assets/icons/employee.svg";
 import AttendanceIcon from "../assets/icons/attendance.svg";
@@ -11,52 +12,67 @@ import AnnouncementIcon from "../assets/icons/announcement.svg";
 import SupportIcon from "../assets/icons/support.svg";
 import SettingsIcon from "../assets/icons/settings.svg";
 
-// Styled Components
 const SidebarContainer = styled.div`
-  width: 242px; /* Adjusted width to 242px */
+  width: 200px;
   background: #f8f8f8;
-  height: 100vh; /* Fixed height for full viewport */
+  height: 100vh;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   border-right: 1px solid #e0e0e0;
-  position: fixed; /* Sidebar will now be fixed */
-  top: 0; /* Stick to the top */
-  left: 0; /* Stick to the left */
-  z-index: 1000; /* Ensure sidebar is above other content */
+  position: fixed;
+  top: 0;
+  left: ${({ isOpen }) => (isOpen ? "0" : "-242px")};
+  z-index: 1000;
+  transition: left 0.3s ease;
+
+  @media (min-width: 769px) {
+    left: 0;
+  }
 `;
 
 const Logo = styled.h1`
   color: #333;
-  font-size: 2rem; /* Bigger font size for logo */
+  font-size: 2rem;
   text-align: center;
-  margin-bottom: 3rem; /* Spacing below logo */
+  margin-bottom: 3rem;
 `;
 
-const SidebarItem = styled.div`
+const SidebarLink = styled(NavLink)`
   display: flex;
   align-items: center;
-  text-align: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  color: #555;
-  font-size: 1.2rem; /* Increased font size */
+  color: #555; /* Default text and icon color */
+  font-size: 1rem;
   cursor: pointer;
   padding-left: 30px;
+  text-decoration: none;
 
   &.active {
-    color: #e74c3c;
+    color: #e74c3c; /* Active text color */
     font-weight: bold;
+
+    img {
+      filter: brightness(0) saturate(100%) invert(36%) sepia(64%)
+        saturate(5230%) hue-rotate(-3deg) brightness(98%) contrast(101%);
+    }
   }
 
   &:hover {
-    color: #333;
+    color: #333; /* Hover text color */
+
+    img {
+      filter: brightness(0) saturate(100%) invert(29%) sepia(15%)
+        saturate(5212%) hue-rotate(170deg) brightness(95%) contrast(87%);
+    }
   }
 
   img {
     width: 20px;
     height: 20px;
+    transition: filter 0.3s ease, color 0.3s ease; /* Smooth transition */
   }
 `;
 
@@ -68,48 +84,99 @@ const SidebarSectionTitle = styled.div`
   padding-left: 30px;
 `;
 
-const Sidebar = () => {
-  return (
-    <SidebarContainer>
-      {/* Logo */}
-      <Logo>WeHR</Logo>
+const CloseButton = styled.div`
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: none;
 
-      {/* Main Sidebar Items */}
-      <SidebarItem className="active">
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+const Sidebar = ({ isOpen, setIsOpen }) => {
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <SidebarContainer isOpen={isOpen}>
+      <CloseButton onClick={() => setIsOpen(false)}>×</CloseButton>
+      <Logo>WeHR</Logo>
+      <SidebarLink
+        to="/dashboard"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={DashboardIcon} alt="Dashboard" />
         Dashboard
-      </SidebarItem>
-      <SidebarItem>
+      </SidebarLink>
+      <SidebarLink
+        to="/employee"
+        isActive={
+          (match, location) => location.pathname.startsWith("/employee") // Active for both /employee and /employee/employee-list
+        }
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={EmployeeIcon} alt="Employee" />
         Employee
-      </SidebarItem>
-      <SidebarItem>
+      </SidebarLink>
+      <SidebarLink
+        to="/attendance"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={AttendanceIcon} alt="Attendance" />
         Attendance
-      </SidebarItem>
-      <SidebarItem>
+      </SidebarLink>
+      <SidebarLink
+        to="/payroll"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={PayrollIcon} alt="Payroll" />
-        PayRoll
-      </SidebarItem>
-      <SidebarItem>
+        Payroll
+      </SidebarLink>
+      <SidebarLink
+        to="/task"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={TaskIcon} alt="Task" />
         Task
-      </SidebarItem>
-      <SidebarItem>
+      </SidebarLink>
+      <SidebarLink
+        to="/announcement"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={AnnouncementIcon} alt="Announcement" />
         Announcement
-      </SidebarItem>
-
-      {/* Other Section */}
+      </SidebarLink>
       <SidebarSectionTitle>Other</SidebarSectionTitle>
-      <SidebarItem>
+      <SidebarLink
+        to="/support"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={SupportIcon} alt="Support" />
         Support
-      </SidebarItem>
-      <SidebarItem>
+      </SidebarLink>
+      <SidebarLink
+        to="/settings"
+        activeClassName="active"
+        onClick={handleLinkClick}
+      >
         <img src={SettingsIcon} alt="Settings" />
         Settings
-      </SidebarItem>
+      </SidebarLink>
     </SidebarContainer>
   );
 };

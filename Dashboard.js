@@ -13,6 +13,11 @@ import RobImage from "./images/rob.png";
 const DashboardContainer = styled.div`
   display: flex;
   font-family: Arial, sans-serif;
+  justify-content: center;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  flex-direction: column; /* For mobile view, switch to column */
 `;
 
 const MainContent = styled.div`
@@ -20,7 +25,10 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
-  margin-left: 278px; /* Add margin to avoid overlay with the sidebar */
+  margin-left: 238px;
+  @media (max-width: 768px) {
+    margin-left: 0; /* Remove sidebar margin for mobile */
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -31,6 +39,9 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Stack columns in mobile view */
+  }
 `;
 
 const WidgetsContainer = styled.div`
@@ -42,7 +53,11 @@ const WidgetsContainer = styled.div`
 const Row1Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 0.5rem;
+  height: auto;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Stack widgets vertically on mobile */
+  }
 `;
 
 const Widget = styled.div`
@@ -52,10 +67,9 @@ const Widget = styled.div`
   background: #fff;
   color: #161e54;
   h3 {
-    font-size: 1.5rem;
+    font-size: 1rem;
     margin-bottom: 0.5rem;
   }
-
   p {
     font-size: 3rem;
     margin: 0;
@@ -68,10 +82,12 @@ const Row2Container = styled.div`
   display: grid;
   grid-template-columns: 49% 49%;
   gap: 1rem;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Stack Row2 widgets vertically on mobile */
+  }
 `;
 
 const Row2Widget = styled(Widget)`
-  min-height: 180px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -146,29 +162,50 @@ const HeadingWrapper = styled.div`
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   margin-bottom: 2rem;
-  gap: 28.9rem;
+  gap: 12.7rem;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Stack headings on mobile */
+    gap: 0; /* Remove gap */
+  }
 `;
 
 const SectionTitle = styled.h2`
   color: #333;
   margin: 0;
+
+  /* Hide the calendar heading on mobile view */
+  @media (max-width: 768px) {
+    display: ${({ isCalendar }) =>
+      isCalendar ? "none" : "block"}; /* Hide Calendar heading only */
+  }
+`;
+
+const MobileCalendarTitle = styled.h2`
+  display: none;
+  color: #333;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    display: block; /* Show only on mobile */
+  }
 `;
 
 const StyledCalendar = styled(Calendar)`
-  /* Override default width */
   && {
-    width: 100% !important; /* Force it to take full available space */
-    max-width: 700px !important; /* Adjust to your preferred width */
-    margin: 0 auto; /* Center it horizontally */
+    width: 100% !important;
+    max-width: 700px !important;
+    margin: 0 auto;
     background: #fff;
     border: none;
     border-radius: 8px;
     font-family: Arial, sans-serif;
-    padding: 1rem;
+    padding: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #f8f8f8;
+    max-height: 500px;
+    overflow: hidden;
   }
 
-  /* Navigation styling */
   .react-calendar__navigation {
     display: flex;
     justify-content: space-between;
@@ -176,8 +213,7 @@ const StyledCalendar = styled(Calendar)`
 
     button {
       background: none;
-      border: none;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: #333;
       font-weight: bold;
       cursor: pointer;
@@ -188,29 +224,27 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
-  /* Weekday labels */
   .react-calendar__month-view__weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
     font-weight: bold;
     color: #777;
-    font-size: 1rem;
+    font-size: 0.9rem;
 
     abbr {
-      text-decoration: none; /* Remove underline */
+      text-decoration: none;
     }
   }
 
-  /* Day tiles */
   .react-calendar__tile {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
-    height: 60px;
-    width: 60px;
-    font-size: 1.1rem;
+    border-radius: 20%;
+    height: 45px;
+    width: 45px;
+    font-size: 0.9rem;
     margin: 0.3rem auto;
 
     &:hover {
@@ -218,14 +252,12 @@ const StyledCalendar = styled(Calendar)`
     }
   }
 
-  /* Active day styling */
   .react-calendar__tile--active {
     background: #4c8bf5;
     color: #fff;
     font-weight: bold;
   }
 
-  /* Remove neighboring month days */
   .react-calendar__month-view__days__day--neighboringMonth {
     color: #ccc;
   }
@@ -238,6 +270,10 @@ const BirthdayCalendar = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 3rem;
   justify-items: center;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Stack birthday items vertically on mobile */
+    gap: 2rem; /* Reduce gap on mobile */
+  }
 `;
 
 const BirthdayItem = styled.div`
@@ -284,11 +320,6 @@ const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
 
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    setShowCalendar(false);
-  };
-
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
@@ -303,7 +334,8 @@ const Dashboard = () => {
         <ContentWrapper>
           <HeadingWrapper>
             <SectionTitle>Dashboard</SectionTitle>
-            <SectionTitle>Calendar</SectionTitle>
+            <SectionTitle isCalendar>Calendar</SectionTitle>{" "}
+            {/* Hide on mobile */}
           </HeadingWrapper>
 
           <GridContainer>
@@ -377,6 +409,7 @@ const Dashboard = () => {
             </div>
 
             <div>
+              <MobileCalendarTitle>Calendar</MobileCalendarTitle>
               <StyledCalendar
                 value={date}
                 onChange={setDate}

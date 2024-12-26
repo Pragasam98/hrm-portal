@@ -18,6 +18,8 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     padding: 0; /* Remove padding for mobile view */
+    justify-content: center; /* Center everything on mobile */
+    align-items: center;
   }
 `;
 
@@ -26,6 +28,7 @@ export const LeftSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-item: center;
   padding: 2rem;
   background-color: #f8f8f8;
   height: 100vh; /* Full height for the left section */
@@ -34,6 +37,7 @@ export const LeftSection = styled.div`
     width: 100%; /* Take full width on mobile */
     padding: 2rem 1rem;
     margin-bottom: 0;
+    align-items: center; /* Center content on mobile */
   }
 `;
 
@@ -57,7 +61,7 @@ export const Logo = styled.div`
   font-weight: bold;
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   margin-left: 90px;
 
   img {
@@ -67,6 +71,7 @@ export const Logo = styled.div`
 
   @media (max-width: 768px) {
     margin-left: 0;
+    justify-content: center; /* Center logo on mobile */
   }
 `;
 
@@ -79,6 +84,7 @@ export const Title = styled.h1`
   @media (max-width: 768px) {
     font-size: 2.8rem;
     margin-left: 0;
+    text-align: center;
   }
 `;
 
@@ -91,6 +97,7 @@ export const Subtitle = styled.h2`
   @media (max-width: 768px) {
     font-size: 1.5rem;
     margin-left: 0;
+    text-align: center;
   }
 `;
 
@@ -166,6 +173,16 @@ export const Graphic = styled.div`
 
 export const ErrorMessage = styled.div`
   color: red;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+  min-height: 1.2rem; /* Reserve space for the error message */
+  visibility: ${({ show }) =>
+    show ? "visible" : "hidden"}; /* Keep space but hide if no error */
+  margin-left: 90px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    text-align: center; /* Center align error on mobile */
+  }
 `;

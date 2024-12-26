@@ -95,6 +95,7 @@ function LoginPage() {
             value={formData.email}
             onChange={handleInputChange}
           />
+
           <Input
             type="password"
             name="password"
@@ -102,8 +103,7 @@ function LoginPage() {
             value={formData.password}
             onChange={handleInputChange}
           />
-          {/* Error Message */}
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <ErrorMessage show={Boolean(error)}>{error}</ErrorMessage>
           {/* Remember Me Checkbox */}
           <CheckboxContainer>
             <input type="checkbox" id="rememberMe" />
