@@ -2,58 +2,87 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar"; // Sidebar component
 import Navbar from "./Navbar"; // Navbar component
+import {
+  FaSearch,
+  FaEllipsisV,
+  FaCheck,
+  FaTimes,
+  FaEye,
+  FaCheckCircle,
+  FaClock,
+} from "react-icons/fa"; // Importing icons
 
-// Styled Components
-const LeaveRequestContainer = styled.div`
+const EmployeeContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
   max-width: 1440px;
   width: 100%;
   margin: 0 auto;
   font-family: Arial, sans-serif;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
 const MainContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 238px;
+  margin-left: 0;
   background: #fff;
   z-index: 0;
 
-  @media (max-width: 768px) {
-    margin-left: 0;
+  @media (min-width: 768px) {
+    margin-left: 238px;
   }
 `;
 
 const ContentWrapper = styled.div`
-  padding: 1rem;
+  padding: 0.5rem;
+  padding-top: -1rem;
+
+  @media (min-width: 768px) {
+    padding: 1rem;
+  }
+`;
+
+const HeaderSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0.2rem;
+
   h1 {
-    font-size: 1.5rem; /* Adjust the font size as needed */
-    margin-bottom: 1rem; /* Optional: Adjust margin for spacing */
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0; /* Add spacing below the heading */
+  }
+
+  @media (min-width: 768px) {
+    h1 {
+      margin-bottom: 1.5rem; /* Larger spacing for larger screens */
+    }
   }
 `;
 
 const Header = styled.div`
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(180px, 1fr)
-  ); /* Adjust column size */
-  gap: 0.1rem; /* Reduce the gap between cards */
-  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  padding-top: -1rem;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
+    gap: 0.5rem; /* Adds space between the cards on small screens */
   }
 `;
-
 const HeaderCard = styled.div`
-  padding: 1.5rem;
+  padding: 1rem; /* Reduced padding */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
   border-radius: 8px;
-  width: 180px; /* Set the desired width */
-  position: relative; /* Enable positioning for child elements */
+  width: 180px; /* Keep the width consistent */
+  position: relative;
 
   h3 {
     font-size: 1rem;
@@ -61,7 +90,7 @@ const HeaderCard = styled.div`
   }
 
   p {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Adjust font size if needed */
     margin: 0;
   }
 
@@ -69,32 +98,193 @@ const HeaderCard = styled.div`
     font-size: 0.9rem;
     color: #666;
     position: absolute;
-    bottom: 10px; /* Adjust as needed for spacing */
-    right: 10px; /* Adjust as needed for spacing */
+    bottom: 10px; /* Keep spacing consistent */
+    right: 10px;
+  }
+  @media (max-width: 768px) {
+    width: calc(100% - 2rem); /* Increase width to take full available space */
+    margin-bottom: 1rem; /* Spacing between cards */
+    height: auto; /* Adjust height to be flexible */
   }
 `;
+
+const EmployeeListContainer = styled.div`
+  margin-top: 1rem;
+  padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  position: relative;
+  max-height: 400px;
+  overflow-y: auto;
+`;
+
+const EmployeeListHeading = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`;
+
+const Heading = styled.p`
+  font-weight: bold;
+`;
+
+const EmployeeCount = styled.p``;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
 
-  th,
-  td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-  }
-
-  tr:nth-child(even) {
-    background-color: #fafafa;
+  @media (max-width: 768px) {
+    display: none; /* Hide table on mobile */
   }
 `;
 
+const TableHeader = styled.thead`
+  background-color: #f9f9f9;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+`;
+
+const TableHeaderCell = styled.th`
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+  background-color: #f9f9f9;
+  border: none;
+`;
+
+const TableCell = styled.td`
+  padding: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #333;
+  border: none;
+`;
+
+const TableRow = styled.tr`
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+const StatusWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: ${(props) =>
+    props.status === "Approved"
+      ? "#28a745"
+      : "rgb(82, 82, 82)"}; /* Font color based on status */
+  background-color: #e0e0e0; /* Gray background */
+`;
+
+const StatusIcon = styled.div`
+  font-size: 0.9rem;
+  color: ${(props) =>
+    props.status === "Approved"
+      ? "#28a745"
+      : "rgb(82, 82, 82)"}; /* Icon color based on status */
+  margin-left: ${(props) =>
+    props.status === "Pending"
+      ? "0.6rem"
+      : "0"}; /* Increased gap for Pending status */
+`;
+const NameEmailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const SearchBarContainer = styled.div`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  padding: 0.3rem;
+  border-radius: 5px;
+  width: 200px;
+  border: 1px solid rgb(212, 212, 212);
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  padding: 0.3rem;
+  font-size: 0.8rem;
+`;
+
+const SearchIconWrapper = styled.div`
+  width: 18px;
+  height: 18px;
+  padding-top: 2px;
+  color: #777;
+`;
+
+const CustomDropdown = ({ options, value, onChange }) => {
+  return (
+    <div>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          padding: "0.3rem",
+          border: "1px solid #ddd",
+          borderRadius: "5px",
+          fontSize: "0.9rem",
+          backgroundColor: "#fff",
+          width: "100%",
+        }}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+const AccordionContainer = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+const AccordionItem = styled.div`
+  margin: 1rem 0;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const AccordionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+`;
+
+const AccordionContent = styled.div`
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  border-radius: 5px;
+`;
 const ActionsDropdown = styled.div`
   position: relative;
 
@@ -109,22 +299,38 @@ const ActionsDropdown = styled.div`
     z-index: 10;
 
     button {
-      display: block;
+      display: flex; /* Using flexbox to align icon and text */
+      align-items: center; /* Centers items vertically */
+      gap: 8px; /* Spacing between the icon and text */
       padding: 0.5rem 1rem;
       background: none;
       border: none;
       text-align: left;
-      width: 100%;
       cursor: pointer;
+      width: 100%;
 
       &:hover {
         background-color: #f0f0f0;
+      }
+
+      svg {
+        font-size: 1.2rem; /* Set icon size */
+        color: #333; /* Icon color */
       }
     }
   }
 `;
 
 const LeaveRequest = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({
+    name: "",
+    leaveType: "",
+    reason: "",
+    status: "",
+  });
+  const [openAccordion, setOpenAccordion] = useState(null);
+
   const [dropdownVisible, setDropdownVisible] = useState(null);
 
   const toggleDropdown = (index) => {
@@ -134,103 +340,365 @@ const LeaveRequest = () => {
   const leaveRequests = [
     {
       name: "MAGHESH",
-      date: "6/3/22",
-      type: "Casual Leave",
+      email: "magesh@Dotcod.in",
+      requestDate: "6/3/22",
+      leaveType: "Casual Leave",
       reason: "Not Well",
-      days: 1,
+      noDays: 1,
       status: "Pending",
     },
     {
       name: "Tesla",
-      date: "12/2/22 - 16/02/22",
-      type: "Sick Leave",
+      email: "Rsahull@Dotcod.in",
+      requestDate: "12/2/22 - 16/02/22",
+      leaveType: "Sick Leave",
       reason: "Not Well",
-      days: 4,
+      noDays: 4,
       status: "Approved",
     },
     {
       name: "GM",
-      date: "4/19/23",
-      type: "Casual Leave",
+      email: "gm@Dotcod.in",
+      requestDate: "4/19/23",
+      leaveType: "Casual Leave",
       reason: "Sick Leave",
-      days: 1,
+      noDays: 1,
+      status: "Approved",
+    },
+    {
+      name: "AARP",
+      email: "aarp@Dotcod.in",
+      requestDate: "1/2/23",
+      leaveType: "Sick Leave",
+      reason: "Marriage Function",
+      noDays: 1,
+      status: "Approved",
+    },
+    {
+      name: "Disney",
+      email: "Disney@Dotcod.in",
+      requestDate: "9/4/23",
+      leaveType: "Sick Leave",
+      reason: "Marriage Function",
+      noDays: 1,
+      status: "Approved",
+    },
+    {
+      name: "Prime Therapeutics",
+      email: "PrimeTherapeutics@Dotcod.in",
+      requestDate: "12/2/22 - 16/02/22",
+      leaveType: "Sick Leave",
+      reason: "Marriage Function",
+      noDays: 3,
       status: "Approved",
     },
   ];
 
+  const handleFilterChange = (column, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [column]: value,
+    }));
+  };
+
+  const filteredRequests = leaveRequests.filter((employee) => {
+    // Search query filter
+    if (
+      searchQuery &&
+      !employee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Status filter
+    if (
+      filters.status &&
+      employee.status.toLowerCase() !== filters.status.toLowerCase()
+    ) {
+      return false;
+    }
+
+    // Leave type filter
+    if (
+      filters.leaveType &&
+      employee.leaveType.toLowerCase() !== filters.leaveType.toLowerCase()
+    ) {
+      return false;
+    }
+
+    // Reason filter
+    if (
+      filters.reason &&
+      employee.reason.toLowerCase() !== filters.reason.toLowerCase()
+    ) {
+      return false;
+    }
+
+    // No days filter
+    if (filters.noDays === "lessThan2" && employee.noDays >= 2) {
+      return false;
+    }
+
+    if (filters.noDays === "moreThan2" && employee.noDays <= 2) {
+      return false;
+    }
+
+    return true;
+  });
+
   return (
-    <LeaveRequestContainer>
+    <EmployeeContainer>
       <Sidebar />
       <MainContent>
         <Navbar />
         <ContentWrapper>
-          <h1>Leave Request</h1>
+          <HeaderSection>
+            <h1>Leave Request</h1>
+            <Header>
+              <HeaderCard bgColor="#ffefe7">
+                <h3>Casual Leave</h3>
+                <p>04</p>
+                <p className="bottom-right-text">+2% Jan month</p>
+              </HeaderCard>
+              <HeaderCard bgColor="#fdebf9">
+                <h3>Emergency Leave</h3>
+                <p>06</p>
+                <p className="bottom-right-text">+2% Jan month</p>
+              </HeaderCard>
+              <HeaderCard bgColor="#e8f0fb">
+                <h3>Total Leave Jan</h3>
+                <p>10</p>
+                <p className="bottom-right-text">+2% Jan month</p>
+              </HeaderCard>
+              <HeaderCard bgColor="#f8f3e9">
+                <h3>Today Leave</h3>
+                <p>02</p>
+                <p className="bottom-right-text">23/01 Monday</p>
+              </HeaderCard>
+            </Header>
+          </HeaderSection>
+          <EmployeeListContainer>
+            <EmployeeListHeading>
+              <Heading>Leave Request</Heading>
+              <EmployeeCount>{filteredRequests.length}</EmployeeCount>
+            </EmployeeListHeading>
+            <SearchBarContainer>
+              <SearchIconWrapper>
+                <FaSearch />
+              </SearchIconWrapper>
+              <SearchInput
+                type="text"
+                placeholder="Search Employee..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </SearchBarContainer>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderCell>
+                    <CustomDropdown
+                      options={[
+                        { label: "Name", value: "" },
+                        { label: "Ascending", value: "ascending" },
+                        { label: "Descending", value: "descending" },
+                      ]}
+                      value={filters.name} // The value for the 'name' filter
+                      onChange={(value) => handleFilterChange("name", value)} // Update the 'name' filter
+                    />
+                  </TableHeaderCell>
+                  <TableHeaderCell>
+                    <CustomDropdown
+                      options={[
+                        { label: "Requested Date", value: "" },
+                        { label: "Oldest First", value: "oldest" },
+                        { label: "Newest First", value: "newest" },
+                      ]}
+                      value={filters.requestedDate} // The value for the 'requestedDate' filter
+                      onChange={(value) =>
+                        handleFilterChange("requestedDate", value)
+                      } // Update the 'requestedDate' filter
+                    />
+                  </TableHeaderCell>
+                  <TableHeaderCell>
+                    <CustomDropdown
+                      options={[
+                        { label: "Leave Type", value: "" },
+                        { label: "Casual Leave", value: "Casual Leave" },
+                        { label: "Sick Leave", value: "Sick Leave" },
+                      ]}
+                      value={filters.leaveType} // The value for the 'leaveType' filter
+                      onChange={(value) =>
+                        handleFilterChange("leaveType", value)
+                      } // Update the 'leaveType' filter
+                    />
+                  </TableHeaderCell>
+                  <TableHeaderCell>
+                    <CustomDropdown
+                      options={[
+                        { label: "Reason", value: "" },
+                        { label: "Personal", value: "personal" },
+                        { label: "Medical", value: "medical" },
+                        { label: "Vacation", value: "vacation" },
+                        { label: "Other", value: "other" },
+                      ]}
+                      value={filters.reason} // The value for the 'reason' filter
+                      onChange={(value) => handleFilterChange("reason", value)} // Update the 'reason' filter
+                    />
+                  </TableHeaderCell>
+                  <TableHeaderCell>
+                    <CustomDropdown
+                      options={[
+                        { label: "No. of Days", value: "" },
+                        { label: "Less than 2", value: "lessThan2" },
+                        { label: "More than 2", value: "moreThan2" },
+                      ]}
+                      value={filters.noDays} // The value for the 'noDays' filter
+                      onChange={(value) => handleFilterChange("noDays", value)} // Update the 'noDays' filter
+                    />
+                  </TableHeaderCell>
+                  <TableHeaderCell>
+                    <CustomDropdown
+                      options={[
+                        { label: "Status", value: "" },
+                        { label: "Confirmed", value: "confirmed" },
+                        { label: "Probation", value: "probation" },
+                      ]}
+                      value={filters.status} // The value for the 'status' filter
+                      onChange={(value) => handleFilterChange("status", value)} // Update the 'status' filter
+                    />
+                  </TableHeaderCell>
+                  <TableHeaderCell>Actions</TableHeaderCell>
+                </TableRow>
+              </TableHeader>
 
-          {/* Header Section - Leave Request Stats */}
-          <Header>
-            <HeaderCard bgColor="#ffefe7">
-              <h3>Casual Leave</h3>
-              <p>04</p>
-              <p className="bottom-right-text">+2% Jan month</p>
-            </HeaderCard>
-            <HeaderCard bgColor="#fdebf9">
-              <h3>Emergency Leave</h3>
-              <p>06</p>
-              <p className="bottom-right-text">+2% Jan month</p>
-            </HeaderCard>
-            <HeaderCard bgColor="#e8f0fb">
-              <h3>Total Leave Jan</h3>
-              <p>10</p>
-              <p className="bottom-right-text">+2% Jan month</p>
-            </HeaderCard>
-            <HeaderCard bgColor="#f8f3e9">
-              <h3>Today Leave</h3>
-              <p>02</p>
-              <p className="bottom-right-text">23/01 Monday</p>
-            </HeaderCard>
-          </Header>
+              <tbody>
+                {filteredRequests.map((employee, index) => (
+                  <TableRow key={employee.id}>
+                    <TableCell>
+                      <NameEmailContainer>
+                        <span>{employee.name}</span>
+                        <span>{employee.email}</span>
+                      </NameEmailContainer>
+                    </TableCell>
+                    <TableCell>{employee.requestDate}</TableCell>
+                    <TableCell>{employee.leaveType}</TableCell>
+                    <TableCell>{employee.reason}</TableCell>
+                    <TableCell>{employee.noDays}</TableCell>
+                    <TableCell>
+                      <StatusWrapper status={employee.status}>
+                        {employee.status}
+                        <StatusIcon status={employee.status}>
+                          {employee.status === "Approved" && <FaCheckCircle />}
+                          {employee.status === "Pending" && <FaClock />}
+                        </StatusIcon>
+                      </StatusWrapper>
+                    </TableCell>
+                    <TableCell>
+                      <ActionsDropdown>
+                        <FaEllipsisV
+                          onClick={() => toggleDropdown(index)}
+                        ></FaEllipsisV>
+                        {dropdownVisible === index && (
+                          <div className="menu">
+                            <button>
+                              <FaCheck style={{ color: "#28a745" }} /> Approve
+                              Leave
+                            </button>
+                            <button>
+                              <FaTimes style={{ color: "#dc3545" }} /> Reject
+                              Leave
+                            </button>
+                            <button>
+                              <FaEye style={{ color: "#007bff" }} /> View
+                              Details
+                            </button>
+                          </div>
+                        )}
+                      </ActionsDropdown>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </tbody>
+            </Table>
 
-          {/* Leave Request Table */}
-          <Table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Request Date</th>
-                <th>Leave Type</th>
-                <th>Reason</th>
-                <th>No Days</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaveRequests.map((request, index) => (
-                <tr key={index}>
-                  <td>{request.name}</td>
-                  <td>{request.date}</td>
-                  <td>{request.type}</td>
-                  <td>{request.reason}</td>
-                  <td>{request.days}</td>
-                  <td>{request.status}</td>
-                  <td>
-                    <ActionsDropdown>
-                      <button onClick={() => toggleDropdown(index)}>...</button>
-                      {dropdownVisible === index && (
-                        <div className="menu">
-                          <button>Approve Leave</button>
-                          <button>Reject Leave</button>
-                          <button>View Details</button>
-                        </div>
-                      )}
-                    </ActionsDropdown>
-                  </td>
-                </tr>
+            {/* Accordion for mobile */}
+            <AccordionContainer>
+              {filteredRequests.map((employee) => (
+                <AccordionItem key={employee.id}>
+                  <AccordionHeader
+                    onClick={() =>
+                      setOpenAccordion(
+                        openAccordion === employee.id ? null : employee.id
+                      )
+                    }
+                  >
+                    <div>
+                      <strong>{employee.name}</strong>
+                      <p>{employee.email}</p>
+                    </div>
+                    <div>{openAccordion === employee.id ? "-" : "+"}</div>
+                  </AccordionHeader>
+
+                  {openAccordion === employee.id && (
+                    <AccordionContent>
+                      <div>
+                        <strong>Request Date:</strong> {employee.requestDate}
+                      </div>
+                      <div>
+                        <strong>Leave Type:</strong> {employee.leaveType}
+                      </div>
+                      <div>
+                        <strong>Reason:</strong> {employee.reason}
+                      </div>
+                      <div>
+                        <strong>No. of Days:</strong> {employee.noDays}
+                      </div>
+                      <div>
+                        <strong>Status:</strong>
+                        <StatusWrapper status={employee.status}>
+                          {employee.status}
+                          <StatusIcon status={employee.status}>
+                            {employee.status === "Approved" && (
+                              <FaCheckCircle />
+                            )}
+                            {employee.status === "Pending" && <FaClock />}
+                          </StatusIcon>
+                        </StatusWrapper>
+                      </div>
+                      <div>
+                        <strong>Actions:</strong>
+                        <ActionsDropdown>
+                          <FaEllipsisV
+                            onClick={() => toggleDropdown(employee.id)}
+                          />
+                          {dropdownVisible === employee.id && (
+                            <div className="menu">
+                              <button>
+                                <FaCheck style={{ color: "#28a745" }} /> Approve
+                                Leave
+                              </button>
+                              <button>
+                                <FaTimes style={{ color: "#dc3545" }} /> Reject
+                                Leave
+                              </button>
+                              <button>
+                                <FaEye style={{ color: "#007bff" }} /> View
+                                Details
+                              </button>
+                            </div>
+                          )}
+                        </ActionsDropdown>
+                      </div>
+                    </AccordionContent>
+                  )}
+                </AccordionItem>
               ))}
-            </tbody>
-          </Table>
+            </AccordionContainer>
+          </EmployeeListContainer>
         </ContentWrapper>
       </MainContent>
-    </LeaveRequestContainer>
+    </EmployeeContainer>
   );
 };
 

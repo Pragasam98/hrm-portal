@@ -2,15 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar"; // Sidebar component
 import Navbar from "./Navbar"; // Navbar component
-import {
-  FaSearch,
-  FaEllipsisV,
-  FaCheck,
-  FaTimes,
-  FaEye,
-  FaCheckCircle,
-  FaClock,
-} from "react-icons/fa"; // Importing icons
+import { FaSearch, FaEllipsisV, FaCheck, FaTimes, FaEye } from "react-icons/fa"; // Importing icons
 
 const EmployeeContainer = styled.div`
   display: flex;
@@ -62,44 +54,6 @@ const HeaderSection = styled.div`
     h1 {
       margin-bottom: 1.5rem; /* Larger spacing for larger screens */
     }
-  }
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  gap: 1rem;
-  padding-top: -1rem;
-
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-    gap: 1rem; /* Adds space between the cards on small screens */
-  }
-`;
-const HeaderCard = styled.div`
-  padding: 1rem; /* Reduced padding */
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
-  border-radius: 8px;
-  width: 180px; /* Keep the width consistent */
-  position: relative;
-
-  h3 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    font-size: 2rem; /* Adjust font size if needed */
-    margin: 0;
-  }
-
-  .bottom-right-text {
-    font-size: 0.9rem;
-    color: #666;
-    position: absolute;
-    bottom: 10px; /* Keep spacing consistent */
-    right: 10px;
   }
 `;
 
@@ -167,33 +121,7 @@ const TableRow = styled.tr`
     background-color: #f5f5f5;
   }
 `;
-const StatusWrapper = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.4rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: ${(props) =>
-    props.status === "Approved"
-      ? "#28a745"
-      : "#ff9800"}; /* Font color based on status */
-  background-color: #e0e0e0; /* Gray background */
-`;
 
-const StatusIcon = styled.div`
-  font-size: 0.9rem;
-  color: ${(props) =>
-    props.status === "Approved"
-      ? "#28a745"
-      : "#ff9800"}; /* Icon color based on status */
-  margin-left: ${(props) =>
-    props.status === "Pending"
-      ? "0.6rem"
-      : "0"}; /* Increased gap for Pending status */
-`;
 const NameEmailContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -294,16 +222,23 @@ const ActionsDropdown = styled.div`
     z-index: 10;
 
     button {
-      display: block;
+      display: flex; /* Using flexbox to align icon and text */
+      align-items: center; /* Centers items vertically */
+      gap: 8px; /* Spacing between the icon and text */
       padding: 0.5rem 1rem;
       background: none;
       border: none;
       text-align: left;
-      width: 100%;
       cursor: pointer;
+      width: 100%;
 
       &:hover {
         background-color: #f0f0f0;
+      }
+
+      svg {
+        font-size: 1.2rem; /* Set icon size */
+        color: #333; /* Icon color */
       }
     }
   }
@@ -325,60 +260,66 @@ const EmployeeList = () => {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
 
-  const leaveRequests = [
+  const attendances = [
     {
       name: "MAGHESH",
       email: "magesh@Dotcod.in",
-      requestDate: "6/3/22",
-      leaveType: "Casual Leave",
-      reason: "Not Well",
-      noDays: 1,
-      status: "Pending",
+      joinDate: "4/15/23",
+      designation: "Software Engineer",
+      status: "Confirmed",
+      createdDate: "1/1/23",
+      releavedDate: null,
+      salaryHikeByDate: "5/1/23",
     },
     {
       name: "Tesla",
-      email: "Rsahull@Dotcod.in",
-      requestDate: "12/2/22 - 16/02/22",
-      leaveType: "Sick Leave",
-      reason: "Not Well",
-      noDays: 4,
-      status: "Approved",
+      email: "Rshahull@Dotcod.in",
+      joinDate: "1/2/23",
+      designation: "Software Engineer",
+      status: "Probation",
+      createdDate: "12/1/22",
+      releavedDate: null,
+      salaryHikeByDate: "4/1/23",
     },
     {
       name: "GM",
       email: "gm@Dotcod.in",
-      requestDate: "4/19/23",
-      leaveType: "Casual Leave",
-      reason: "Sick Leave",
-      noDays: 1,
-      status: "Approved",
+      joinDate: "9/4/23",
+      designation: "Software Engineer",
+      status: "Confirmed",
+      createdDate: "8/1/23",
+      releavedDate: null,
+      salaryHikeByDate: "12/1/23",
     },
     {
       name: "AARP",
       email: "aarp@Dotcod.in",
-      requestDate: "1/2/23",
-      leaveType: "Sick Leave",
-      reason: "Marriage Function",
-      noDays: 1,
-      status: "Approved",
+      joinDate: "6/3/22",
+      designation: "Software Engineer",
+      status: "Probation",
+      createdDate: "5/1/22",
+      releavedDate: "12/1/23",
+      salaryHikeByDate: "10/1/22",
     },
     {
       name: "Disney",
-      email: "Disney@Dotcod.in",
-      requestDate: "9/4/23",
-      leaveType: "Sick Leave",
-      reason: "Marriage Function",
-      noDays: 1,
-      status: "Approved",
+      email: "disney@Dotcod.in",
+      joinDate: "12/2/22",
+      designation: "Software Engineer",
+      status: "Confirmed",
+      createdDate: "11/1/22",
+      releavedDate: null,
+      salaryHikeByDate: "4/1/23",
     },
     {
-      name: "Prime Therapeutics",
-      email: "PrimeTherapeutics@Dotcod.in",
-      requestDate: "12/2/22 - 16/02/22",
-      leaveType: "Sick Leave",
-      reason: "Marriage Function",
-      noDays: 3,
-      status: "Approved",
+      name: "Chevy",
+      email: "chevy@Dotcod.in",
+      joinDate: "4/19/23",
+      designation: "Software Engineer",
+      status: "Probation",
+      createdDate: "3/1/23",
+      releavedDate: null,
+      salaryHikeByDate: "8/1/23",
     },
   ];
 
@@ -389,7 +330,7 @@ const EmployeeList = () => {
     }));
   };
 
-  const filteredRequests = leaveRequests.filter((employee) => {
+  const filteredRequests = attendances.filter((employee) => {
     // Search query filter
     if (
       searchQuery &&
@@ -441,33 +382,11 @@ const EmployeeList = () => {
         <Navbar />
         <ContentWrapper>
           <HeaderSection>
-            <h1>Employee</h1>
-            <Header>
-              <HeaderCard bgColor="#ffefe7">
-                <h3>Casual Leave</h3>
-                <p>04</p>
-                <p className="bottom-right-text">+2% Jan month</p>
-              </HeaderCard>
-              <HeaderCard bgColor="#fdebf9">
-                <h3>Emergency Leave</h3>
-                <p>06</p>
-                <p className="bottom-right-text">+2% Jan month</p>
-              </HeaderCard>
-              <HeaderCard bgColor="#e8f0fb">
-                <h3>Total Leave Jan</h3>
-                <p>10</p>
-                <p className="bottom-right-text">+2% Jan month</p>
-              </HeaderCard>
-              <HeaderCard bgColor="#f8f3e9">
-                <h3>Today Leave</h3>
-                <p>02</p>
-                <p className="bottom-right-text">23/01 Monday</p>
-              </HeaderCard>
-            </Header>
+            <h1>Attendances</h1>
           </HeaderSection>
           <EmployeeListContainer>
             <EmployeeListHeading>
-              <Heading>Employee</Heading>
+              <Heading>Attendances</Heading>
               <EmployeeCount>{filteredRequests.length}</EmployeeCount>
             </EmployeeListHeading>
             <SearchBarContainer>
@@ -498,51 +417,33 @@ const EmployeeList = () => {
                   <TableHeaderCell>
                     <CustomDropdown
                       options={[
-                        { label: "Requested Date", value: "" },
-                        { label: "Oldest First", value: "oldest" },
-                        { label: "Newest First", value: "newest" },
+                        { label: "Sort by Date", value: "" },
+                        { label: "Created Date", value: "createdDate" },
+                        { label: "Join Date", value: "joinDate" },
+                        { label: "Releaved Date", value: "releavedDate" },
+                        {
+                          label: "Salary Hike Date",
+                          value: "salaryHikeByDate",
+                        },
                       ]}
-                      value={filters.requestedDate} // The value for the 'requestedDate' filter
+                      value={filters.joinDate}
                       onChange={(value) =>
-                        handleFilterChange("requestedDate", value)
-                      } // Update the 'requestedDate' filter
+                        handleFilterChange("joinDate", value)
+                      }
                     />
                   </TableHeaderCell>
+
                   <TableHeaderCell>
                     <CustomDropdown
                       options={[
-                        { label: "Leave Type", value: "" },
-                        { label: "Casual Leave", value: "Casual Leave" },
-                        { label: "Sick Leave", value: "Sick Leave" },
+                        { label: "Designation", value: "" },
+                        { label: "Software Engineer", value: "engineer" },
+                        { label: "Manager", value: "manager" },
                       ]}
-                      value={filters.leaveType} // The value for the 'leaveType' filter
+                      value={filters.designation}
                       onChange={(value) =>
-                        handleFilterChange("leaveType", value)
-                      } // Update the 'leaveType' filter
-                    />
-                  </TableHeaderCell>
-                  <TableHeaderCell>
-                    <CustomDropdown
-                      options={[
-                        { label: "Reason", value: "" },
-                        { label: "Personal", value: "personal" },
-                        { label: "Medical", value: "medical" },
-                        { label: "Vacation", value: "vacation" },
-                        { label: "Other", value: "other" },
-                      ]}
-                      value={filters.reason} // The value for the 'reason' filter
-                      onChange={(value) => handleFilterChange("reason", value)} // Update the 'reason' filter
-                    />
-                  </TableHeaderCell>
-                  <TableHeaderCell>
-                    <CustomDropdown
-                      options={[
-                        { label: "No. of Days", value: "" },
-                        { label: "Less than 2", value: "lessThan2" },
-                        { label: "More than 2", value: "moreThan2" },
-                      ]}
-                      value={filters.noDays} // The value for the 'noDays' filter
-                      onChange={(value) => handleFilterChange("noDays", value)} // Update the 'noDays' filter
+                        handleFilterChange("designation", value)
+                      }
                     />
                   </TableHeaderCell>
                   <TableHeaderCell>
@@ -552,8 +453,8 @@ const EmployeeList = () => {
                         { label: "Confirmed", value: "confirmed" },
                         { label: "Probation", value: "probation" },
                       ]}
-                      value={filters.status} // The value for the 'status' filter
-                      onChange={(value) => handleFilterChange("status", value)} // Update the 'status' filter
+                      value={filters.status}
+                      onChange={(value) => handleFilterChange("status", value)}
                     />
                   </TableHeaderCell>
                   <TableHeaderCell>Actions</TableHeaderCell>
@@ -569,19 +470,24 @@ const EmployeeList = () => {
                         <span>{employee.email}</span>
                       </NameEmailContainer>
                     </TableCell>
-                    <TableCell>{employee.requestDate}</TableCell>
-                    <TableCell>{employee.leaveType}</TableCell>
-                    <TableCell>{employee.reason}</TableCell>
-                    <TableCell>{employee.noDays}</TableCell>
                     <TableCell>
-                      <StatusWrapper status={employee.status}>
-                        {employee.status}
-                        <StatusIcon status={employee.status}>
-                          {employee.status === "Approved" && <FaCheckCircle />}
-                          {employee.status === "Pending" && <FaClock />}
-                        </StatusIcon>
-                      </StatusWrapper>
+                      {filters.joinDate === "createdDate"
+                        ? new Date(employee.createdDate).toLocaleDateString()
+                        : filters.joinDate === "joinDate"
+                        ? new Date(employee.joinDate).toLocaleDateString()
+                        : filters.joinDate === "releavedDate"
+                        ? employee.releavedDate
+                          ? new Date(employee.releavedDate).toLocaleDateString()
+                          : "Not Released"
+                        : filters.joinDate === "salaryHikeByDate"
+                        ? new Date(
+                            employee.salaryHikeByDate
+                          ).toLocaleDateString()
+                        : new Date(employee.joinDate).toLocaleDateString()}
                     </TableCell>
+
+                    <TableCell>{employee.designation}</TableCell>
+                    <TableCell>{employee.status}</TableCell>
                     <TableCell>
                       <ActionsDropdown>
                         <FaEllipsisV
@@ -590,17 +496,16 @@ const EmployeeList = () => {
                         {dropdownVisible === index && (
                           <div className="menu">
                             <button>
-                              {" "}
-                              <FaCheck />
-                              Approve Leave
+                              <FaCheck style={{ color: "#28a745" }} /> Approve
+                              Leave
                             </button>
                             <button>
-                              {" "}
-                              <FaTimes /> Reject Leave
+                              <FaTimes style={{ color: "#dc3545" }} /> Reject
+                              Leave
                             </button>
                             <button>
-                              {" "}
-                              <FaEye /> View Details
+                              <FaEye style={{ color: "#007bff" }} /> View
+                              Details
                             </button>
                           </div>
                         )}
@@ -630,9 +535,6 @@ const EmployeeList = () => {
                   </AccordionHeader>
                   {openAccordion === employee.id && (
                     <AccordionContent>
-                      <div>
-                        <strong>ID:</strong> {employee.id}
-                      </div>
                       <div>
                         <strong>Name:</strong> {employee.name}
                       </div>
