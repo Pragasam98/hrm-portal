@@ -331,6 +331,11 @@ const LeaveRequest = () => {
   });
   const [openAccordion, setOpenAccordion] = useState(null);
 
+  const toggleAccordion = (id) => {
+    // If the clicked accordion is already open, close it, else open it
+    setOpenAccordion(openAccordion === id ? null : id);
+  };
+
   const [dropdownVisible, setDropdownVisible] = useState(null);
 
   const toggleDropdown = (index) => {
@@ -627,20 +632,16 @@ const LeaveRequest = () => {
               {filteredRequests.map((employee) => (
                 <AccordionItem key={employee.id}>
                   <AccordionHeader
-                    onClick={() =>
-                      setOpenAccordion(
-                        openAccordion === employee.id ? null : employee.id
-                      )
-                    }
+                    onClick={() => toggleAccordion(employee.name)}
                   >
                     <div>
                       <strong>{employee.name}</strong>
                       <p>{employee.email}</p>
                     </div>
-                    <div>{openAccordion === employee.id ? "-" : "+"}</div>
+                    <div>{openAccordion === employee.name ? "-" : "+"}</div>
                   </AccordionHeader>
 
-                  {openAccordion === employee.id && (
+                  {openAccordion === employee.name && (
                     <AccordionContent>
                       <div>
                         <strong>Request Date:</strong> {employee.requestDate}

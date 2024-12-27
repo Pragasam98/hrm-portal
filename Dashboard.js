@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
@@ -316,9 +316,68 @@ const BirthdayItem = styled.div`
   }
 `;
 
+const employees = [
+  {
+    id: "11D001",
+    name: "MAGHESH",
+    email: "magesh@Dotcod.in",
+    dateOfBirth: "1995-06-15",
+    designation: "Software Engineer",
+  },
+  {
+    id: "11D002",
+    name: "Tesla",
+    email: "Rshahull@Dotcod.in",
+    dateOfBirth: "1998-12-01",
+    designation: "Product Manager",
+  },
+  {
+    id: "11D003",
+    name: "GM",
+    email: "gm@Dotcod.in",
+    dateOfBirth: "1992-04-25",
+    designation: "Software Engineer",
+  },
+  {
+    id: "11D004",
+    name: "AARP",
+    email: "aarp@Dotcod.in",
+    dateOfBirth: "1994-08-14",
+    designation: "UX/UI Designer",
+  },
+  {
+    id: "11D005",
+    name: "Disney",
+    email: "disney@Dotcod.in",
+    dateOfBirth: "1997-01-10",
+    designation: "Marketing Lead",
+  },
+  {
+    id: "11D006",
+    name: "Chevy",
+    email: "chevy@Dotcod.in",
+    dateOfBirth: "1996-09-30",
+    designation: "HR Manager",
+  },
+];
+
 const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+
+  // This hook is responsible for recalculating birthdays whenever the date changes
+  useEffect(() => {
+    const currentMonth = date.getMonth(); // Get the current month (0 - 11)
+
+    // Filter employees whose birthdays match the current month
+    const updatedEmployees = employees.filter((employee) => {
+      const birthMonth = new Date(employee.dateOfBirth).getMonth();
+      return birthMonth === currentMonth; // Match the birth month
+    });
+
+    setFilteredEmployees(updatedEmployees); // Update the filtered employees
+  }, [date]); // Only re-run when the `date` changes
 
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
@@ -399,7 +458,7 @@ const Dashboard = () => {
                   <small>Yesterday, 09:15 AM</small>
                 </AnnouncementItem>
                 <SeeAll>
-                  <a href="#">See All Announcement</a>
+                  <a href="announcement">See All Announcement</a>
                 </SeeAll>
                 <DateContainer onClick={toggleCalendar}>
                   {currentDate}
@@ -411,9 +470,9 @@ const Dashboard = () => {
             <div>
               <MobileCalendarTitle>Calendar</MobileCalendarTitle>
               <StyledCalendar
-                value={date}
-                onChange={setDate}
-                nextLabel="›"
+                value={date} // Set the current date
+                onChange={setDate} // Update the date when the month changes
+                nextLabel="›" // Navigation labels
                 prevLabel="‹"
                 next2Label={null}
                 prev2Label={null}
@@ -421,21 +480,22 @@ const Dashboard = () => {
 
               <h3>Birthday Calendar</h3>
               <BirthdayCalendar>
-                <BirthdayItem>
-                  <img src={RobImage} alt="Robert Whistable" />
-                  <div>
-                    <h4>Robert Whistable</h4>
-                    <p>Product Manager</p>
-                    <p>15 Feb 1998</p>
-                  </div>
-                </BirthdayItem>
-                <BirthdayItem>
-                  <img src={RobImage} alt="Robert Whistable" />
-                  <div>
-                    <h4>Robert Whistable</h4>
-                    <p>Product Manager</p>
-                  </div>
-                </BirthdayItem>
+                {filteredEmployees.length > 0 ? (
+                  filteredEmployees.map((employee) => (
+                    <BirthdayItem key={employee.id}>
+                      <img src={RobImage} alt={employee.name} />
+                      <div>
+                        <h4>{employee.name}</h4>
+                        <p>{employee.designation}</p>
+                        <p>
+                          {new Date(employee.dateOfBirth).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </BirthdayItem>
+                  ))
+                ) : (
+                  <p>No birthdays this month.</p>
+                )}
               </BirthdayCalendar>
             </div>
           </GridContainer>

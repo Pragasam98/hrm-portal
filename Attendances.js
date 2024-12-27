@@ -244,7 +244,7 @@ const ActionsDropdown = styled.div`
   }
 `;
 
-const EmployeeList = () => {
+const Attendances = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     name: "",
@@ -252,7 +252,12 @@ const EmployeeList = () => {
     reason: "",
     status: "",
   });
-  const [openAccordion, setOpenAccordion] = useState(null);
+  const [openAccordion, setOpenAccordion] = useState(null); // Track only one open accordion at a time
+
+  const toggleAccordion = (id) => {
+    // If the clicked accordion is already open, close it, else open it
+    setOpenAccordion(openAccordion === id ? null : id);
+  };
 
   const [dropdownVisible, setDropdownVisible] = useState(null);
 
@@ -275,7 +280,7 @@ const EmployeeList = () => {
       name: "Tesla",
       email: "Rshahull@Dotcod.in",
       joinDate: "1/2/23",
-      designation: "Software Engineer",
+      designation: "Product Manager",
       status: "Probation",
       createdDate: "12/1/22",
       releavedDate: null,
@@ -295,7 +300,7 @@ const EmployeeList = () => {
       name: "AARP",
       email: "aarp@Dotcod.in",
       joinDate: "6/3/22",
-      designation: "Software Engineer",
+      designation: "UX/UI Designer",
       status: "Probation",
       createdDate: "5/1/22",
       releavedDate: "12/1/23",
@@ -305,7 +310,7 @@ const EmployeeList = () => {
       name: "Disney",
       email: "disney@Dotcod.in",
       joinDate: "12/2/22",
-      designation: "Software Engineer",
+      designation: "Marketing Lead",
       status: "Confirmed",
       createdDate: "11/1/22",
       releavedDate: null,
@@ -315,7 +320,7 @@ const EmployeeList = () => {
       name: "Chevy",
       email: "chevy@Dotcod.in",
       joinDate: "4/19/23",
-      designation: "Software Engineer",
+      designation: "HR Manager",
       status: "Probation",
       createdDate: "3/1/23",
       releavedDate: null,
@@ -330,50 +335,43 @@ const EmployeeList = () => {
     }));
   };
 
-  const filteredRequests = attendances.filter((employee) => {
-    // Search query filter
-    if (
-      searchQuery &&
-      !employee.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ) {
-      return false;
-    }
+  const filteredattendances = attendances
+    .filter((employee) => {
+      // Search query filter
+      if (
+        searchQuery &&
+        !employee.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ) {
+        return false;
+      }
 
-    // Status filter
-    if (
-      filters.status &&
-      employee.status.toLowerCase() !== filters.status.toLowerCase()
-    ) {
-      return false;
-    }
+      // Status filter
+      if (
+        filters.status &&
+        employee.status.toLowerCase() !== filters.status.toLowerCase()
+      ) {
+        return false;
+      }
 
-    // Leave type filter
-    if (
-      filters.leaveType &&
-      employee.leaveType.toLowerCase() !== filters.leaveType.toLowerCase()
-    ) {
-      return false;
-    }
+      // Designation filter
+      if (
+        filters.designation &&
+        employee.designation.toLowerCase() !== filters.designation.toLowerCase()
+      ) {
+        return false;
+      }
 
-    // Reason filter
-    if (
-      filters.reason &&
-      employee.reason.toLowerCase() !== filters.reason.toLowerCase()
-    ) {
-      return false;
-    }
-
-    // No days filter
-    if (filters.noDays === "lessThan2" && employee.noDays >= 2) {
-      return false;
-    }
-
-    if (filters.noDays === "moreThan2" && employee.noDays <= 2) {
-      return false;
-    }
-
-    return true;
-  });
+      return true;
+    })
+    .sort((a, b) => {
+      // Sorting by name
+      if (filters.name === "ascending") {
+        return a.name.localeCompare(b.name);
+      } else if (filters.name === "descending") {
+        return b.name.localeCompare(a.name);
+      }
+      return 0; // No sorting if "ascending" or "descending" is not selected
+    });
 
   return (
     <EmployeeContainer>
@@ -387,7 +385,7 @@ const EmployeeList = () => {
           <EmployeeListContainer>
             <EmployeeListHeading>
               <Heading>Attendances</Heading>
-              <EmployeeCount>{filteredRequests.length}</EmployeeCount>
+              <EmployeeCount>{filteredattendances.length}</EmployeeCount>
             </EmployeeListHeading>
             <SearchBarContainer>
               <SearchIconWrapper>
@@ -437,8 +435,13 @@ const EmployeeList = () => {
                     <CustomDropdown
                       options={[
                         { label: "Designation", value: "" },
-                        { label: "Software Engineer", value: "engineer" },
-                        { label: "Manager", value: "manager" },
+                        {
+                          label: "Software Engineer",
+                          value: "Software Engineer",
+                        },
+                        { label: "Product Manager", value: "Product Manager" },
+                        { label: "UX/UI Designer", value: "UX/UI Designer" },
+                        { label: "HR Manager", value: "HR Manager" },
                       ]}
                       value={filters.designation}
                       onChange={(value) =>
@@ -462,7 +465,7 @@ const EmployeeList = () => {
               </TableHeader>
 
               <tbody>
-                {filteredRequests.map((employee, index) => (
+                {filteredattendances.map((employee, index) => (
                   <TableRow key={employee.id}>
                     <TableCell>
                       <NameEmailContainer>
@@ -518,22 +521,18 @@ const EmployeeList = () => {
 
             {/* Accordion for mobile */}
             <AccordionContainer>
-              {filteredRequests.map((employee) => (
+              {filteredattendances.map((employee) => (
                 <AccordionItem key={employee.id}>
                   <AccordionHeader
-                    onClick={() =>
-                      setOpenAccordion(
-                        openAccordion === employee.id ? null : employee.id
-                      )
-                    }
+                    onClick={() => toggleAccordion(employee.name)}
                   >
                     <div>
                       <strong>{employee.name}</strong>
                       <p>{employee.email}</p>
                     </div>
-                    <div>{openAccordion === employee.id ? "-" : "+"}</div>
+                    <div>{openAccordion === employee.name ? "-" : "+"}</div>
                   </AccordionHeader>
-                  {openAccordion === employee.id && (
+                  {openAccordion === employee.name && (
                     <AccordionContent>
                       <div>
                         <strong>Name:</strong> {employee.name}
@@ -573,4 +572,4 @@ const EmployeeList = () => {
   );
 };
 
-export default EmployeeList;
+export default Attendances;

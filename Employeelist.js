@@ -284,17 +284,31 @@ const EmployeeList = () => {
       createdDate: "1/1/23",
       releavedDate: null,
       salaryHikeByDate: "5/1/23",
+      mobileNumber: "9876543210",
+      dateOfBirth: "1995-06-15",
+      gender: "Male",
+      maritalStatus: "Single",
+      isPhysicallyChallenged: false,
+      bloodGroup: "O+",
+      personalEmail: "magesh.personal@mail.com",
     },
     {
       id: "11D002",
       name: "Tesla",
       email: "Rshahull@Dotcod.in",
       joinDate: "1/2/23",
-      designation: "Software Engineer",
+      designation: "Product Manager",
       status: "Probation",
       createdDate: "12/1/22",
       releavedDate: null,
       salaryHikeByDate: "4/1/23",
+      mobileNumber: "9988776655",
+      dateOfBirth: "1998-12-01",
+      gender: "Female",
+      maritalStatus: "Married",
+      isPhysicallyChallenged: false,
+      bloodGroup: "A+",
+      personalEmail: "tesla.personal@mail.com",
     },
     {
       id: "11D003",
@@ -306,28 +320,49 @@ const EmployeeList = () => {
       createdDate: "8/1/23",
       releavedDate: null,
       salaryHikeByDate: "12/1/23",
+      mobileNumber: "9876543211",
+      dateOfBirth: "1992-04-25",
+      gender: "Male",
+      maritalStatus: "Single",
+      isPhysicallyChallenged: true,
+      bloodGroup: "B+",
+      personalEmail: "gm.personal@mail.com",
     },
     {
       id: "11D004",
       name: "AARP",
       email: "aarp@Dotcod.in",
       joinDate: "6/3/22",
-      designation: "Software Engineer",
+      designation: "UX/UI Designer",
       status: "Probation",
       createdDate: "5/1/22",
       releavedDate: "12/1/23",
       salaryHikeByDate: "10/1/22",
+      mobileNumber: "9123456789",
+      dateOfBirth: "1994-08-14",
+      gender: "Male",
+      maritalStatus: "Divorced",
+      isPhysicallyChallenged: false,
+      bloodGroup: "O-",
+      personalEmail: "aarp.personal@mail.com",
     },
     {
       id: "11D005",
       name: "Disney",
       email: "disney@Dotcod.in",
       joinDate: "12/2/22",
-      designation: "Software Engineer",
+      designation: "HR Manager",
       status: "Confirmed",
       createdDate: "11/1/22",
       releavedDate: null,
       salaryHikeByDate: "4/1/23",
+      mobileNumber: "9345678901",
+      dateOfBirth: "1997-01-10",
+      gender: "Female",
+      maritalStatus: "Married",
+      isPhysicallyChallenged: false,
+      bloodGroup: "AB+",
+      personalEmail: "disney.personal@mail.com",
     },
     {
       id: "11D006",
@@ -339,6 +374,13 @@ const EmployeeList = () => {
       createdDate: "3/1/23",
       releavedDate: null,
       salaryHikeByDate: "8/1/23",
+      mobileNumber: "9871234567",
+      dateOfBirth: "1996-09-30",
+      gender: "Female",
+      maritalStatus: "Single",
+      isPhysicallyChallenged: false,
+      bloodGroup: "A-",
+      personalEmail: "chevy.personal@mail.com",
     },
   ];
 
@@ -388,6 +430,11 @@ const EmployeeList = () => {
     });
 
   const navigate = useNavigate();
+
+  const handleAccordionToggle = (employeeId) => {
+    // Toggle the accordion by checking if it's already open
+    setOpenAccordion((prev) => (prev === employeeId ? null : employeeId));
+  };
 
   return (
     <EmployeeContainer>
@@ -465,8 +512,13 @@ const EmployeeList = () => {
                     <CustomDropdown
                       options={[
                         { label: "Designation", value: "" },
-                        { label: "Software Engineer", value: "engineer" },
-                        { label: "Manager", value: "manager" },
+                        {
+                          label: "Software Engineer",
+                          value: "Software Engineer",
+                        },
+                        { label: "Product Manager", value: "Product Manager" },
+                        { label: "UX/UI Designer", value: "UX/UI Designer" },
+                        { label: "HR Manager", value: "HR Manager" },
                       ]}
                       value={filters.designation}
                       onChange={(value) =>
@@ -533,11 +585,7 @@ const EmployeeList = () => {
               {filteredEmployees.map((employee) => (
                 <AccordionItem key={employee.id}>
                   <AccordionHeader
-                    onClick={() =>
-                      setOpenAccordion(
-                        openAccordion === employee.id ? null : employee.id
-                      )
-                    }
+                    onClick={() => handleAccordionToggle(employee.id)}
                   >
                     <div>
                       <strong>{employee.name}</strong>
@@ -573,8 +621,28 @@ const EmployeeList = () => {
                         {employee.releavedDate ? employee.releavedDate : "N/A"}
                       </div>
                       <div>
-                        <strong>Salary Hike By Date:</strong>{" "}
-                        {employee.salaryHikeByDate}
+                        <strong>Mobile Number:</strong> {employee.mobileNumber}
+                      </div>
+                      <div>
+                        <strong>Date Of Birth:</strong> {employee.dateOfBirth}
+                      </div>
+                      <div>
+                        <strong>Gender:</strong> {employee.gender}
+                      </div>
+                      <div>
+                        <strong>Marital Status:</strong>{" "}
+                        {employee.maritalStatus}
+                      </div>
+                      <div>
+                        <strong>is Physically Challenged:</strong>{" "}
+                        {employee.isPhysicallyChallenged}
+                      </div>
+                      <div>
+                        <strong>Blood Group:</strong> {employee.bloodGroup}
+                      </div>
+                      <div>
+                        <strong>Personal Email:</strong>{" "}
+                        {employee.personalEmail}
                       </div>
                     </AccordionContent>
                   )}
