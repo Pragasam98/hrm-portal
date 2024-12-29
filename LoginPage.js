@@ -28,6 +28,13 @@ function LoginPage() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Mock credentials for testing
+  const MOCK_CREDENTIALS = {
+    email: "user@example.com",
+    password: "password123",
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -71,9 +78,22 @@ function LoginPage() {
       return;
     }
 
-    // Clear error message and navigate to the dashboard page
-    setError("");
-    navigate("/dashboard");
+    // Simulate API call with a delay
+    setIsLoading(true);
+    setTimeout(() => {
+      if (
+        email === MOCK_CREDENTIALS.email &&
+        password === MOCK_CREDENTIALS.password
+      ) {
+        // Clear error message, save token, and navigate
+        setError("");
+        localStorage.setItem("authToken", "mockToken123");
+        navigate("/dashboard");
+      } else {
+        setError("Invalid credentials!");
+      }
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
@@ -110,7 +130,9 @@ function LoginPage() {
             <label htmlFor="rememberMe">Remember Me</label>
           </CheckboxContainer>
           {/* Sign-in Button */}
-          <Button onClick={handleSignIn}>Sign In</Button>
+          <Button onClick={handleSignIn} disabled={isLoading}>
+            {isLoading ? "Signing In..." : "Sign In"}
+          </Button>
         </LeftSection>
 
         {/* Right Section with Graphic */}

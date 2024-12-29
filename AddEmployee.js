@@ -50,25 +50,26 @@ const Header = styled.h1`
 
 const Section = styled.div`
   background: #fff;
-  padding: 1.5rem;
+  padding: ${(props) =>
+    props.padding || "1.5rem"}; /* Default padding if not provided */
   margin-bottom: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
-    padding: 1rem; /* Reduce padding for mobile */
-    margin-bottom: 1rem; /* Reduce margin for mobile */
+    padding: ${(props) =>
+      props.padding || "1rem"}; /* Adjust padding for mobile */
   }
 `;
 
 const SectionHeader = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Space out heading and buttons */
+  padding-bottom: 10px;
 
   h2 {
-    font-size: 1.25rem;
+    font-size: 1rem;
     margin: 0;
 
     @media (max-width: 768px) {
@@ -112,7 +113,6 @@ const InputWrapper = styled.div`
   flex-direction: column;
 
   label {
-    font-weight: bold;
     margin-bottom: 0.5rem;
   }
 
@@ -134,13 +134,55 @@ const InputWrapper = styled.div`
   }
 `;
 
+const ConfigurationSection = styled.div`
+  background: #fff;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+`;
+const ButtonGroupInline = styled.div`
+  display: flex;
+  gap: 1rem; /* Adjust the gap between the buttons */
+
+  button {
+    padding: 0.75rem 2rem; /* Increased padding for more space inside buttons */
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &.cancel {
+      background: #f5f5f5;
+      color: #333;
+
+      &:hover {
+        background: #ddd;
+      }
+    }
+
+    &.save {
+      background: #000;
+      color: #fff;
+
+      &:hover {
+        background: rgb(0, 0, 0);
+      }
+    }
+  }
+`;
+
 const AddEmployee = () => {
   const [isEmployeeDetailsVisible, setIsEmployeeDetailsVisible] =
     useState(true);
   const [isPersonalDetailsVisible, setIsPersonalDetailsVisible] =
     useState(true);
   const [isDepartmentVisible, setIsDepartmentVisible] = useState(true);
-  const [isConfigurationVisible, setIsConfigurationVisible] = useState(true);
 
   return (
     <EmployeeContainer>
@@ -294,31 +336,15 @@ const AddEmployee = () => {
           </Section>
 
           {/* Configuration */}
-          <Section>
+          <ConfigurationSection>
             <SectionHeader>
               <h2>Configuration</h2>
-              <button
-                onClick={() =>
-                  setIsConfigurationVisible(!isConfigurationVisible)
-                }
-              >
-                {isConfigurationVisible ? "-" : "+"}
-              </button>
+              <ButtonGroupInline>
+                <button className="cancel">Cancel</button>
+                <button className="save">Save</button>
+              </ButtonGroupInline>
             </SectionHeader>
-            {isConfigurationVisible && (
-              <div>
-                <p>Select Configuration options:</p>
-                <div>
-                  <input type="radio" id="config1" name="config" />
-                  <label htmlFor="config1">Option 1</label>
-                </div>
-                <div>
-                  <input type="radio" id="config2" name="config" />
-                  <label htmlFor="config2">Option 2</label>
-                </div>
-              </div>
-            )}
-          </Section>
+          </ConfigurationSection>
         </ContentWrapper>
       </MainContent>
     </EmployeeContainer>

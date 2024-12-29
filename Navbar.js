@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaAngleDown, FaBell, FaEnvelope, FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import Sidebar from "./Sidebar"; // Import Sidebar component
 import UserImage from "./images/user.png";
 
@@ -89,6 +90,7 @@ const ProfileSection = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  position: relative; /* Required for absolute positioning of the dropdown */
 
   svg {
     font-size: 1.5rem;
@@ -121,9 +123,54 @@ const ProfileSection = styled.div`
   }
 `;
 
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  padding: 0.5rem 1rem;
+  display: ${(props) => (props.isOpen ? "block" : "none")};
+  z-index: 10;
+
+  button {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  }
+`;
+
+const StatusIndicator = styled.div`
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px; /* Reduced the width */
+  height: 8px; /* Reduced the height */
+  border-radius: 50%;
+  background-color: ${({ isOnline }) =>
+    isOnline ? "green" : "red"}; /* Dynamic color based on status */
+  border: 2px solid #fff;
+`;
+
 const Navbar = () => {
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false); // Manage sidebar open state
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // Manage dropdown visibility
+  const [isOnline, setIsOnline] = useState(navigator.onLine); // Online/Offline status
+  const navigate = useNavigate(); // Initialize navigate function
 
   const toggleSearchBar = () => {
     setSearchVisible(!isSearchVisible); // Toggle search bar visibility
@@ -132,6 +179,31 @@ const Navbar = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen); // Toggle sidebar open state
   };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
+  };
+
+  const handleLogout = () => {
+    // Clear any authentication token or data (e.g., localStorage)
+    localStorage.removeItem("authToken"); // Remove the token or other credentials
+    // Redirect to the login page
+    navigate("/"); // Redirect to login page
+  };
+
+  // Handle online/offline status changes
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   return (
     <div>
@@ -157,11 +229,19 @@ const Navbar = () => {
 
         {/* Profile Section */}
         <ProfileSection>
-          <FaBell />
+          {/* Bell Icon with Status Indicator */}
+          <div style={{ position: "relative" }}>
+            <FaBell />
+            <StatusIndicator isOnline={isOnline} />{" "}
+            {/* Status Indicator in Bell Icon */}
+          </div>
           <FaEnvelope />
           <img src={UserImage} alt="User" />
           <span>Admirra John</span>
-          <FaAngleDown />
+          <FaAngleDown onClick={toggleDropdown} />
+          <DropdownMenu isOpen={isDropdownOpen}>
+            <button onClick={handleLogout}>Logout</button>
+          </DropdownMenu>
         </ProfileSection>
       </NavbarContainer>
     </div>
