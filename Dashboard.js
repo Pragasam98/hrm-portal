@@ -162,7 +162,7 @@ const HeadingWrapper = styled.div`
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   margin-bottom: 2rem;
-  gap: 12.7rem;
+  gap: 22rem;
   @media (max-width: 768px) {
     grid-template-columns: 1fr; /* Stack headings on mobile */
     gap: 0; /* Remove gap */
@@ -184,6 +184,7 @@ const MobileCalendarTitle = styled.h2`
   display: none;
   color: #333;
   margin: 0;
+  padding-bottom: 30px;
 
   @media (max-width: 768px) {
     display: block; /* Show only on mobile */
@@ -387,7 +388,10 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
-      <Sidebar />
+      <div className="side" style={{ position: "relative" }}>
+        <Sidebar />
+      </div>
+
       <MainContent>
         <Navbar />
         <ContentWrapper>

@@ -56,11 +56,15 @@ const HeaderSection = styled.div`
   h1 {
     font-size: 1.5rem;
     margin: 0 0 1rem 0; /* Add spacing below the heading */
+    @media (max-width: 768px) {
+      padding-top: 20px;
+    }
   }
 
   @media (min-width: 768px) {
     h1 {
       margin-bottom: 1.5rem; /* Larger spacing for larger screens */
+      padding-top: 10px;
     }
   }
 `;
@@ -70,41 +74,45 @@ const Header = styled.div`
   justify-content: space-between;
   margin-bottom: 1rem;
   gap: 1rem;
-  padding-top: -1rem;
+  padding-top: 0;
 
   @media (max-width: 768px) {
-    flex-wrap: wrap;
-    gap: 0.5rem; /* Adds space between the cards on small screens */
+    flex-wrap: wrap; /* Wraps cards on smaller screens */
+    gap: 0.5rem; /* Reduces gap between cards for better spacing */
   }
 `;
+
 const HeaderCard = styled.div`
-  padding: 1rem; /* Reduced padding */
+  padding: 1rem; /* Default padding */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
   border-radius: 8px;
-  width: 180px; /* Keep the width consistent */
+  width: 180px; /* Default width for larger screens */
   position: relative;
 
   h3 {
     font-size: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem; /* Space below header */
   }
 
   p {
-    font-size: 2rem; /* Adjust font size if needed */
-    margin: 0;
+    font-size: 2rem; /* Default font size */
+    margin: 0; /* Removes default paragraph margin */
   }
 
   .bottom-right-text {
     font-size: 0.9rem;
     color: #666;
     position: absolute;
-    bottom: 10px; /* Keep spacing consistent */
+    bottom: 10px; /* Keeps text aligned to the bottom */
     right: 10px;
   }
+
   @media (max-width: 768px) {
-    width: calc(100% - 2rem); /* Increase width to take full available space */
-    margin-bottom: 1rem; /* Spacing between cards */
-    height: auto; /* Adjust height to be flexible */
+    width: 70%; /* Adjust width to 80% */
+    margin: 0 auto; /* Centers the card */
+    margin-bottom: 1rem; /* Adds spacing between cards */
+    height: auto; /* Makes height flexible for content */
+    padding: 2rem; /* Adds padding for better visual appeal */
   }
 `;
 
@@ -206,7 +214,7 @@ const NameEmailContainer = styled.div`
 
 const SearchBarContainer = styled.div`
   position: absolute;
-  top: 0.5rem;
+  top: 0.9rem;
   right: 0.5rem;
   display: flex;
   align-items: center;
@@ -284,6 +292,9 @@ const AccordionContent = styled.div`
   padding: 0.5rem;
   background-color: #fff;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  gap: 0.5rem; /* Add spacing between items */
 `;
 const ActionsDropdown = styled.div`
   position: relative;

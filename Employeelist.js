@@ -50,6 +50,9 @@ const HeaderSection = styled.div`
   h1 {
     font-size: 1.5rem;
     margin: 0;
+    @media (max-width: 768px) {
+      padding-top: 20px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -182,7 +185,7 @@ const ThreeDotButton = styled.button`
 
 const SearchBarContainer = styled.div`
   position: absolute;
-  top: 0.5rem;
+  top: 0.9rem;
   right: 0.5rem;
   display: flex;
   align-items: center;
@@ -260,6 +263,9 @@ const AccordionContent = styled.div`
   padding: 0.5rem;
   background-color: #fff;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  gap: 0.5rem; /* Add spacing between items */
 `;
 
 const EmployeeList = () => {

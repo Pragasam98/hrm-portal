@@ -21,14 +21,17 @@ const SidebarContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   border-right: 1px solid #e0e0e0;
-  position: fixed;
+  position: fixed; /* Ensures the sidebar stays fixed on all screen sizes */
   top: 0;
-  left: ${({ isOpen }) => (isOpen ? "0" : "-242px")};
+  left: 0;
   z-index: 1000;
-  transition: left 0.3s ease;
+  transition: transform 0.3s ease;
 
-  @media (min-width: 769px) {
-    left: 0;
+  @media (max-width: 768px) {
+    transform: ${({ isOpen }) =>
+      isOpen ? "translateX(0)" : "translateX(-100%)"};
+    position: fixed;
+    width: 240px;
   }
 `;
 
@@ -119,8 +122,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </SidebarLink>
       <SidebarLink
         to="/employee"
-        isActive={
-          (match, location) => location.pathname.startsWith("/employee") // Active for both /employee and /employee/employee-list
+        isActive={(match, location) =>
+          location.pathname.startsWith("/employee")
         }
         activeClassName="active"
         onClick={handleLinkClick}

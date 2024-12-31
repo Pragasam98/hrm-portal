@@ -48,6 +48,9 @@ const HeaderSection = styled.div`
   h1 {
     font-size: 1.5rem;
     margin: 0 0 1rem 0; /* Add spacing below the heading */
+    @media (max-width: 768px) {
+      padding-top: 20px;
+    }
   }
 
   @media (min-width: 768px) {
@@ -129,7 +132,7 @@ const NameEmailContainer = styled.div`
 
 const SearchBarContainer = styled.div`
   position: absolute;
-  top: 0.5rem;
+  top: 0.9rem;
   right: 0.5rem;
   display: flex;
   align-items: center;
@@ -207,6 +210,9 @@ const AccordionContent = styled.div`
   padding: 0.5rem;
   background-color: #fff;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  gap: 0.5rem; /* Add spacing between items */
 `;
 const ActionsDropdown = styled.div`
   position: relative;

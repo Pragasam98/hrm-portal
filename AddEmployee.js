@@ -45,6 +45,7 @@ const Header = styled.h1`
 
   @media (max-width: 768px) {
     font-size: 1.25rem; /* Adjust header size for mobile */
+    padding-top: 20px;
   }
 `;
 
@@ -131,6 +132,11 @@ const InputWrapper = styled.div`
 
   @media (max-width: 768px) {
     flex: 1 1 100%; /* Inputs take full width on mobile */
+
+    input,
+    select {
+      height: 2.5rem; /* Increase height for better usability on mobile */
+    }
   }
 `;
 
